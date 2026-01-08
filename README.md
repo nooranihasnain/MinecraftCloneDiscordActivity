@@ -20,7 +20,9 @@ project-root/
 │
 ├── frontend/                # Vite frontend (Discord Activity shell)
 │   ├── public/
-│   │   └── unity/           # Unity WebGL build output
+│   │   └── unity/           # ← Unity WebGL build goes here
+│   │       ├── Build/
+│   │       └── TemplateData/
 │   ├── src/
 │   ├── index.html
 │   ├── package.json
@@ -35,6 +37,77 @@ project-root/
 ├── .gitignore
 └── README.md
 ```
+
+---
+
+## 🎮 Unity WebGL Build (IMPORTANT)
+
+### 1️⃣ Build the Unity project
+In Unity:
+
+1. Open the project
+2. Go to **File → Build Settings**
+3. Select **WebGL**
+4. Set:
+   - **Compression**: Brotli
+   - **Decompression Fallback**: Enabled
+5. Click **Build**
+6. Choose any temporary output folder
+
+Unity will generate:
+- `Build/`
+- `TemplateData/`
+- (an `index.html` you do NOT need)
+
+---
+
+### 2️⃣ Copy the Unity build into the frontend
+
+After building, copy:
+
+```text
+<UnityBuildOutput>/Build/
+<UnityBuildOutput>/TemplateData/
+```
+
+Into:
+
+```text
+frontend/public/unity/Build/
+frontend/public/unity/TemplateData/
+```
+
+⚠️ **Do NOT copy Unity's generated `index.html`**  
+The Activity uses `frontend/index.html` instead.
+
+---
+
+### 3️⃣ Verify required files exist
+
+Your `frontend/public/unity/Build/` folder must contain files like:
+
+```text
+Build.loader.js
+Build.data.unityweb
+Build.framework.js.unityweb
+Build.wasm.unityweb
+```
+
+If these files are missing or renamed, Unity will not load.
+
+---
+
+### 4️⃣ Rebuild when Unity changes
+Whenever you:
+- change C# scripts
+- change scenes
+- update assets
+
+You must:
+1. Rebuild WebGL in Unity
+2. Re-copy the new `Build/` and `TemplateData/` folders into `frontend/public/unity/`
+
+Unity build output is **not committed to Git** (rebuildable).
 
 ---
 
@@ -145,10 +218,6 @@ Use this URL in:
 
 ## 🧠 Discord Developer Portal Setup
 
-### General
-- Copy **Application ID**
-- Copy **Client Secret**
-
 ### OAuth2 → Redirects
 Add:
 ```
@@ -156,6 +225,7 @@ https://YOUR_CLOUDFLARED_URL
 ```
 
 ### Activities → URL Mappings
+
 | Source | Target |
 |------|-------|
 | `/`  | `https://YOUR_CLOUDFLARED_URL` |
@@ -175,72 +245,28 @@ https://YOUR_CLOUDFLARED_URL
 
 ## 🧪 Debugging
 
-### Browser testing
-- Frontend runs in **mock mode**
-- Discord auth is skipped
-
-### Discord testing
-- Auth runs automatically
-- Errors are shown **inside the Activity UI**
-- You can open DevTools with:
-  ```
-  Ctrl + Shift + I
-  ```
-
----
-
-## 🏗️ Unity WebGL Notes
-
-- Platform: **WebGL**
-- Compression: **Brotli**
-- Decompression Fallback: **Enabled**
-- Unity WebGL build output is copied into:
-  ```
-  frontend/public/unity/
-  ```
-
-Unity build files are **not committed** (rebuildable).
+- Browser → mock mode
+- Discord → real auth
+- Errors appear inside Activity UI
+- DevTools shortcut: `Ctrl + Shift + I`
 
 ---
 
 ## 🚀 Production Deployment (overview)
 
-- **Frontend**: static hosting (Cloudflare Pages, Netlify, Vercel)
-- **Backend**: Node hosting (Railway, Render, Fly.io, etc.)
-- Prefer **same domain** with `/api` for backend
-
-Example:
-```
-https://yourdomain.com/        → frontend
-https://yourdomain.com/api    → backend
-```
+- Frontend → static hosting (Cloudflare Pages / Netlify / Vercel)
+- Backend → Node hosting (Railway / Render / Fly.io)
+- Prefer same domain with `/api`
 
 ---
 
 ## 🔒 Security Notes
 
-- Client Secret **never** goes to frontend
+- Client Secret never goes to frontend
 - `.env` files are gitignored
-- Only `VITE_` prefixed vars reach browser
 - OAuth handled server-side only
 
 ---
 
 ## 📄 License
 Choose your license (MIT, Apache 2.0, proprietary, etc.)
-
----
-
-## 🤝 Contributing
-1. Fork repo
-2. Create feature branch
-3. Commit changes
-4. Open PR
-
----
-
-## 🧭 Next Steps
-- Parse Discord user info in Unity
-- Add multiplayer via `instance_id`
-- Use voice channel presence
-- Publish Activity for public servers
