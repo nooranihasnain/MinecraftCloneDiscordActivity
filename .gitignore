@@ -1,12 +1,93 @@
+############################################
+# OS / Editor
+############################################
 .DS_Store
-node_modules
-/build
-/.svelte-kit
-/package
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.log
+
+############################################
+# Environment variables (SECRETS)
+############################################
 .env
 .env.*
-!.env.example
-.vercel
-.output
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
+!*.env.example
+
+############################################
+# Node.js (frontend + backend)
+############################################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+############################################
+# Vite / Frontend build output
+############################################
+frontend/dist/
+frontend/.vite/
+
+############################################
+# Unity generated folders (DO NOT COMMIT)
+############################################
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+
+############################################
+# Unity user-specific files
+############################################
+*.csproj
+*.sln
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+############################################
+# Unity cache / crash reports
+############################################
+sysinfo.txt
+crashlytics-build.properties
+
+############################################
+# Unity Addressables / WebGL cache
+############################################
+AddressableAssetsData/*/Binary/*
+AddressableAssetsData/*/Temp/*
+AddressableAssetsData/*/ContentState.bin
+
+############################################
+# Unity WebGL compression artifacts (rebuildable)
+############################################
+*.unityweb
+*.wasm
+*.data
+*.framework.js
+*.loader.js
+
+############################################
+# Cloudflared
+############################################
+.cloudflare/
+cloudflared.log
+
+############################################
+# Coverage / tests
+############################################
+coverage/
+
+############################################
+# Misc
+############################################
+*.tmp
+*.bak
+*.swp
