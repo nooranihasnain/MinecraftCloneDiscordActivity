@@ -14,6 +14,11 @@ dotenv.config({ path: path.join(__dirname, "..", ".env") });
 const app = express();
 app.use(express.json());
 
+// Serve the built frontend (after you run: cd frontend && npm run build)
+const frontendDist = path.join(__dirname, "..", "frontend", "dist");
+app.use(express.static(frontendDist));
+
+
 // During dev, Vite runs on 5173 and server on 3001.
 // If you use Vite proxy (recommended), you can remove cors entirely.
 // Keeping it here is fine for now.
@@ -60,6 +65,14 @@ app.post("/api/token", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+// SPA fallback: always return index.html for non-API routes
+app.get("*", (req, res) => {
+  // Don't hijack API routes
+  if (req.path.startsWith("/api")) return res.status(404).end();
+  res.sendFile(path.join(frontendDist, "index.html"));
+});
+
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));
