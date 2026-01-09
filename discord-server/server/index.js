@@ -8,8 +8,10 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load env from project root (one level up from /server)
-dotenv.config({ path: path.join(__dirname, "..", ".env") });
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config({ path: path.join(__dirname, "..", ".env") });
+}
+
 
 const app = express();
 app.use(express.json());
@@ -66,12 +68,12 @@ app.post("/api/token", async (req, res) => {
   }
 });
 
-// SPA fallback: always return index.html for non-API routes
-app.get("*", (req, res) => {
-  // Don't hijack API routes
-  if (req.path.startsWith("/api")) return res.status(404).end();
+// SPA fallback (Express 5-safe). Must be AFTER API routes and after express.static(frontendDist)
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api")) return next();  // let API 404 normally
   res.sendFile(path.join(frontendDist, "index.html"));
 });
+
 
 
 const port = process.env.PORT || 3001;
