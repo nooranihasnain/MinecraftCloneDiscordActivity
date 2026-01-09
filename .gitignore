@@ -36,8 +36,6 @@ frontend/.vite/
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
-[Bb]uild/
-[Bb]uilds/
 [Ll]ogs/
 [Mm]emoryCaptures/
 
@@ -64,15 +62,6 @@ crashlytics-build.properties
 AddressableAssetsData/*/Binary/*
 AddressableAssetsData/*/Temp/*
 AddressableAssetsData/*/ContentState.bin
-
-############################################
-# Unity WebGL compression artifacts (rebuildable)
-############################################
-*.unityweb
-*.wasm
-*.data
-*.framework.js
-*.loader.js
 
 ############################################
 # Cloudflared
